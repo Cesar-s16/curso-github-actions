@@ -1,0 +1,36 @@
+name: Expresiones Demo
+
+on: [push, workflow_dispatch]
+
+jobs:
+  expressions-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Expresión 1: Ejecutar solo si el evento es 'push'
+      - name: Run script in Simple Mode (Push)
+        if: ${{ github.event_name == 'push' }}
+        run: python main.py
+        env:
+          NAME: "Push User"
+          MODE: "simple"
+
+      # Expresión 2: Ejecutar solo si el evento es 'workflow_dispatch' (manual)
+      - name: Run script in Advanced Mode (Manual)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: python main.py
+        env:
+          NAME: ${{ github.actor }}
+          MODE: "advanced"
+
+      # Expresión 3: Ejecutar solo si estamos en la rama de aprendizaje
+      - name: Verify Branch
+        if: ${{ contains(github.ref, 'aprendiendo') }}
+        run: echo "Estás progresando en la rama correcta ${{ github.ref }}"
