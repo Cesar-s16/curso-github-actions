@@ -1,0 +1,37 @@
+name: Variables Demo
+
+on: [push, workflow_dispatch]
+
+env:
+  WORKFLOW_VAR: "Soy una variable definida a nivel de Workflow"
+
+jobs:
+  demo-variables:
+    runs-on: ubuntu-latest
+    env:
+      JOB_VAR: "Soy una variable definida a nivel de Job"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Mostrar Variables de Repositorio
+        run: |
+          echo "Variable NOMBRE: ${{ vars.NOMBRE }}"
+          echo "Variable DEV_OPERATOR: ${{ vars.DEV_OPERATOR }}"
+          echo "Variable GUAPLI_VARIABLE: ${{ vars.GUAPLI_VARIABLE }}"
+
+      - name: Mostrar Variables de Entorno (Workflow y Job)
+        run: |
+          echo "Workflow Variable: ${{ env.WORKFLOW_VAR }}"
+          echo "Job Variable: ${{ env.JOB_VAR }}"
+
+      - name: Usar Variable en Script Python
+        run: python main.py
+        env:
+          NAME: ${{ vars.NOMBRE }}
+          MODE: "simple"
