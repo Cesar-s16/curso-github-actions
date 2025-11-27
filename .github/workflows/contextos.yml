@@ -1,0 +1,28 @@
+name: Contextos Demo
+
+on: [push, workflow_dispatch]
+
+jobs:
+  context-explorer:
+    runs-on: ubuntu-latest
+    env:
+      MY_VAR: "Hola desde una variable de entorno"
+    steps:
+      - name: Información del Evento (GitHub Context)
+        run: |
+          echo "Actor: ${{ github.actor }}"
+          echo "Evento: ${{ github.event_name }}"
+          echo "Rama: ${{ github.ref }}"
+          echo "Repositorio: ${{ github.repository }}"
+
+      - name: Información del Runner (Runner Context)
+        run: |
+          echo "Sistema Operativo: ${{ runner.os }}"
+          echo "Directorio temporal: ${{ runner.temp }}"
+
+      - name: Uso de Variables (Env Context)
+        run: echo "Valor de mi variable ${{ env.MY_VAR }}"
+
+      - name: Estado del Job (Job Context)
+        if: always()
+        run: echo "El estado actual del job es ${{ job.status }}"
